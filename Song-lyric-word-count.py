@@ -30,9 +30,9 @@ Returns False if no artist found '''
         #else:
         print("Did you mean: {} ".format(
             artist_search['artist-list'][0]['name']))
-        user_input3 = input('[Y/N] \n')
+        user_input3 = input('[Y/N] \n').lower()
 
-        if user_input3 == 'Y':
+        if user_input3 == 'y':
             artist_name = artist_search['artist-list'][0]['name']
             artist_id = artist_search['artist-list'][0]['id']
             return artist_name, artist_id, artist_search
