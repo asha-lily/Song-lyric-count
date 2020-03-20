@@ -35,7 +35,7 @@ Upon running the program the user is first asked to input the name of an artist 
 
 - "Artist found" : this is displayed if an artist exactly matching the user input is found, or the user selects the artist shown in the previous case.
 
-“Collecting lyrics...” is displayed whilst all of the artist’s recordings are browsed through and each song title added to a list.
+“Collecting lyrics...” is displayed whilst all of the artist’s recordings are browsed through and each song title added to a list. This can take a while for artists with many songs.
 
 Next, the average number of songs by the artist is displayed, followed by the option to show statistics. A user input is required to select whether or not statistics are shown.
 
