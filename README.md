@@ -43,7 +43,7 @@ Next, the average number of songs by the artist is displayed, followed by the op
 Average number of words in songs by ... is ...
 Show statistics? [Y/N]
 ```
-An example of these statistics is shown below.
+An example of these statistics is shown below. Note that statistics cannot be calculated if all of an artist's songs consist of 0 lyrics.
 
 ```
 --------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ The user then has the option to enter another artist, or to quit the program.
 
 ### Note
 
-The Apiary API seems to often return different lyrics for the exact same request (i.e same artist and song name). This results in some inconsistency in the average number of words produced for a given artist, however these variations are often insignificant.
+The Apiary API seems to often return different lyrics for the exact same request (i.e same artist and song name). This results in some inconsistency in the average number of words produced for a given artist, as well as the songs that are displayed as having the most/fewest words.
 
 
 
