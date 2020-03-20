@@ -92,7 +92,7 @@ def get_lyrics(artist_id):
     num_recordings = recordings_browse['recording-count']  # 1746 for Beyonce
     recordings = [None] * num_recordings
 
-    for page_num in range((num_recordings // 100) + 1):
+    for page_num in range(num_recordings // 100):
 
         recordings_browse = musicbrainzngs.browse_recordings(
             artist=artist_id, limit=limit, offset=offset
@@ -102,10 +102,17 @@ def get_lyrics(artist_id):
             song_name = recordings_browse['recording-list'][position]['title']
             index = (page_num * 100) + position
             recordings[index] = song_name
-            if index == (num_recordings - 1):
-
-
         offset += limit
+
+    recordings_browse = musicbrainzngs.browse_recordings(
+        artist=artist_id, limit=limit, offset=offset
+    )  # Gets all recordings linked to artist - returns dict with keys ['recording-list', 'recording-count']
+
+    max_index = num_recordings - ((num_recordings // 100) * 100)
+    for position in range(max_index):
+        song_name = recordings_browse['recording-list'][position]['title']
+        index = ((num_recordings // 100) * 100) + position
+        recordings[index] = song_name
 
     recordings = list(
         dict.fromkeys(recordings)
@@ -127,14 +134,8 @@ After splitting the number of words in the lyrics are counted """
             'https://api.lyrics.ovh/v1/{}/{}'.format(artist_name, song),
             headers=header
         )  # make a get request to the artist/song entity of the Apiary API
-    # except TimeoutError:
-    #     print("Connection timed out - please try again")
-    #     response = None
-    # except ConnectionError:
-    #     print("Connection timed out - please try again")
-    #     response = None
+
     except requests.exceptions.RequestException as e:
-        print("error: {}".format(e))
         response = None
 
     if response == None:
@@ -173,22 +174,54 @@ def get_albums(artist_id):
     A bar chart of each album's year of release and the average number of words is plotted.
 
     """
+    limit = 100
+    offset = 0
 
-    releases = musicbrainzngs.browse_releases(
-        release_type=['album'], artist=artist_id, limit=100, offset=0
+    releases_browse = musicbrainzngs.browse_releases(
+        release_type=['album'], artist=artist_id, limit=limit, offset=offset
     )  # Gets all recordings linked to artist - returns dict with keys ['recording-list', 'recording-count']
+
+    num_releases = releases_browse['release-count']
+    albums = [None] * num_releases
+
+    for page_num in range(num_releases // 100):
+
+        releases_browse = musicbrainzngs.browse_releases(
+            release_type=['album'],
+            artist=artist_id,
+            limit=limit,
+            offset=offset
+        )  # Gets all recordings linked to artist - returns dict with keys ['recording-list', 'recording-count']
+
+        for position in range(limit):  # 0 to 99
+            album_info = releases_browse['release-list'][position]
+            index = (page_num * 100) + position
+            albums[index] = album_info
+        offset += limit
+
+    releases_browse = musicbrainzngs.browse_releases(
+        release_type=['album'], artist=artist_id, limit=limit, offset=offset
+    )  # Gets all recordings linked to artist - returns dict with keys ['recording-list', 'recording-count']
+
+    max_index = num_releases - ((num_releases // 100) * 100)
+    for position in range(max_index):  # 0 to 99
+        album_info = releases_browse['release-list'][position]
+        index = ((num_releases // 100) * 100) + position
+        albums[index] = album_info
+
+    #albums = list(dict.fromkeys(albums))
 
     album_id = {}
     album_dates = {}
 
-    for release in releases['release-list']:
-        if release['title'] not in album_id.keys(
-        ) and release['title'] not in album_dates.keys():
+    for album in albums:
+        if album['title'] not in album_id.keys(
+        ) and album['title'] not in album_dates.keys():
             try:
                 album_date = datetime.datetime.strptime(
-                    str(release['date'])[:4], '%Y').date()
-                album_dates.update({release['title']: album_date.year})
-                album_id.update({release['title']: release['id']})
+                    str(album['date'])[:4], '%Y').date()
+                album_dates.update({album['title']: album_date.year})
+                album_id.update({album['title']: album['id']})
             except KeyError:
                 pass
 
@@ -228,7 +261,7 @@ def get_albums(artist_id):
     plt.title(
         "Graph of average number of words in album \n alongside year of release \n for {}"
         .format(artist_name))
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=90)
     plt.legend()
     plt.show()
 
@@ -259,6 +292,7 @@ def plot_histogram(words_dict2, std_dev):
     plt.title(
         "Histogram showing frequency of occurrence \n of different song lengths (word count) \n in songs by {}"
         .format(artist_name))
+    plt.xticks(rotation=90)
     plt.legend()
     plt.show()
 
@@ -287,6 +321,7 @@ def display_statistics(words_dict2, num_songs):
         )
 
         print("Plotting histogram...")
+        print("(Close figure to continue)")
 
         plot_histogram(words_dict2, std_dev)
 
@@ -343,5 +378,5 @@ if __name__ == '__main__':
                 get_albums(artist_id)
 
         user_input5 = input("Try another artist? [Y/N]\n").lower()
-        if user_input5 == 'n':
+        if user_input5 != 'y':
             looping = False
