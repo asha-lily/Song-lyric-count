@@ -1,3 +1,5 @@
+# Song-lyric-word-count
+
 This program takes the user's input of artist name and returns the average number of words across all of their songs. There is the option to view extra statistics such as the longest and shortest words, a histogram showing the distribution of song lengths, and a bar plot of the average word count per album by year of release.
 
 This program uses the MusicBrainz API to retrieve the artist's list of songs, an the Apiary API to retrieve lyrics for a specified artist and song.
@@ -5,30 +7,16 @@ This program uses the MusicBrainz API to retrieve the artist's list of songs, an
 ## Getting Started
 
 ### Pre-requisites
+
+This program requires Python 3.
+
 ### Installations
-1. Install the relevant libraries as shown below
+Install the relevant libraries as shown below
 
 ```
 pip install musicbrainzngs requests numpy statistics matplotlib datetime
 ```
-2. Import the relevant modules
-```
-import musicbrainzngs
-from multiprocessing import Pool
-from math import floor
-import requests
-import json
-import numpy as np
-import re
-from statistics import stdev, StatisticsError
-from matplotlib import pyplot as plt
-import datetime
-```
 
-3. Set the user agent for the MusicBrainz API; this takes arguments 'Application name' and 'argument'. An example of such arguments is given below.
-```
-musicbrainzngs.set_useragent('Retrieve_Songs', '1.0')
-```
 ### Usage
 Upon running the program the user is first asked to input the name of an artist of their choice. One of the following messages is returned, depending on the input received:
 
