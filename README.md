@@ -18,6 +18,13 @@ pip install musicbrainzngs requests numpy statistics matplotlib datetime
 ```
 
 ### Usage
+
+Run:
+
+```
+python Song-lyric-word-count.py
+```
+
 Upon running the program the user is first asked to input the name of an artist of their choice. One of the following messages is returned, depending on the input received:
 
 - "Artist name empty - please try again": no words were found in the input
